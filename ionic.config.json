@@ -1,0 +1,7 @@
+{
+  "name": "PokemonBrwoser",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
