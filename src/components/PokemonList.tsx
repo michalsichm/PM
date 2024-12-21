@@ -26,47 +26,12 @@ const PokemonList = () => {
             })
             // add error check
             const pokemons: Array<PokemonDetails> = await Promise.all(pokemonPromises);
-            console.log(pokemons);
             setPokemonData(pokemons);
         }
         getPokemonData();
     }, [])
 
 
-    // return (
-    //     <>
-    //         <IonGrid fixed={true}>
-    //             {pokemonData.map((pokemon, index) => {
-    //                 // Create a new row after every 3 items
-    //                 if (index % 3 === 0) {
-    //                     return (
-    //                         <IonRow key={index}>
-    //                             {/* Map 3 pokemon per row */}
-    //                             {[0, 1, 2].map((colIndex) => {
-    //                                 const pokemonItem = pokemonData[index + colIndex];
-    //                                 if (pokemonItem) {
-    //                                     return (
-    //                                         <IonCol key={colIndex} size="4">
-    //                                             <IonCard>
-    //                                                 <img alt="Pokemon Image" src={pokemonItem.imageUrl} />
-    //                                                 <IonCardHeader>
-    //                                                     <IonCardTitle>{pokemonItem.name}</IonCardTitle>
-    //                                                 </IonCardHeader>
-    //                                             </IonCard>
-    //                                         </IonCol>
-    //                                     );
-    //                                 }
-    //                                 return null;
-    //                             })}
-    //                         </IonRow>
-    //                     );
-    //                 }
-    //                 return null;
-    //             })}
-    //         </IonGrid>
-
-    //     </>
-    // );
     return (
         <>
             <IonGrid fixed={true}>
@@ -83,7 +48,6 @@ const PokemonList = () => {
                     ))}
                 </IonRow>
             </IonGrid>
-
         </>
 
     );
