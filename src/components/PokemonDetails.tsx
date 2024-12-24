@@ -3,6 +3,7 @@ import axios from "axios";
 import { heart } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
+import useStorage from "../hooks/useStorage";
 
 interface PokemonDetailPageProps
     extends RouteComponentProps<{
@@ -11,6 +12,7 @@ interface PokemonDetailPageProps
 
 
 type Pokemon = {
+    id: number
     name: string;
     imageUrl: string;
     weight: number;
@@ -25,21 +27,36 @@ const capitalizeFirstLetter = (name: string) => {
 
 const PokemonDetails: React.FC<PokemonDetailPageProps> = ({ match }) => {
     const [pokemon, setPokemon] = useState<Pokemon | null>(null);
+    const { favorites, addFavorite, removeFavorite } = useStorage();
+    const [favorite, setFavorite] = useState(false);
     const url = `https://pokeapi.co/api/v2/pokemon/${match.params.id}`;
 
     useEffect(() => {
         const getDetails = async () => {
             const response = await axios.get(url);
-            const { name, weight, height, sprites: { front_default }, types } = response.data;
+            const { id, name, weight, height, sprites: { front_default }, types } = response.data;
             setPokemon({
-                name: capitalizeFirstLetter(name), imageUrl: front_default,
+                id, name: capitalizeFirstLetter(name), imageUrl: front_default,
                 weight: weight / 10, height: height * 10,
                 types: types.map((t: any) => t.type.name)
             });
         }
         getDetails();
-    }, [url])
+    }, [url]);
 
+
+    useEffect(() => {
+        setFavorite(favorites.includes(parseInt(match.params.id)));
+    }, [favorites]);
+
+
+    const handleFavorite = () => {
+        if (!favorite) {
+            addFavorite(parseInt(match.params.id));
+            return;
+        }
+        removeFavorite(parseInt(match.params.id));
+    }
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', textAlign: 'center' }}>
@@ -55,8 +72,8 @@ const PokemonDetails: React.FC<PokemonDetailPageProps> = ({ match }) => {
                         <IonCardContent>Weight: {pokemon?.weight} kg</IonCardContent>
                         <IonCardContent>Height: {pokemon?.height} cm</IonCardContent>
                         <IonCardContent>Type: {pokemon?.types.join("/")}</IonCardContent>
-                        <IonButton>
-                            <IonIcon icon={heart}></IonIcon>
+                        <IonButton onClick={handleFavorite}>
+                            <IonIcon icon={heart} style={{ color: favorite ? 'red' : 'black' }}></IonIcon>
                         </IonButton>
                     </IonCard>
                 </IonContent>

@@ -18,7 +18,7 @@ const PokemonList = () => {
 
     useEffect(() => {
         getPokemonData();
-    }, [])
+    }, []);
 
     const getPokemonData = async () => {
         const response = await axios.get(url);
