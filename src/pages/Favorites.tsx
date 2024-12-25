@@ -1,5 +1,6 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Favorites.css';
+import PokemonListFavorites from '../components/PokemonListFavorite';
 
 const Favorites: React.FC = () => {
   return (
@@ -15,6 +16,8 @@ const Favorites: React.FC = () => {
             <IonTitle size="large">Favorites</IonTitle>
           </IonToolbar>
         </IonHeader>
+        <PokemonListFavorites></PokemonListFavorites>
+        {/* <PokemonList></PokemonList> */}
       </IonContent>
     </IonPage>
   );

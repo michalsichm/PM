@@ -13,7 +13,6 @@ import { IonReactRouter } from '@ionic/react-router';
 import { compassSharp, ellipse, heartSharp, list, square, triangle } from 'ionicons/icons';
 import Pokedex from './pages/Pokedex';
 import Favorites from './pages/Favorites';
-import Tab3 from './pages/Tab3';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -56,13 +55,10 @@ const App: React.FC = () => (
           <Route exact path="/pokedex">
             <Pokedex />
           </Route>
-          <Route exact path="/favorites">
-            <Favorites />
+          <Route exact path="/favorites" >
+          <Favorites />
           </Route>
           <Route exact path="/pokemon/:id" component={PokemonDetails} />
-          <Route path="/tab3">
-            <Tab3 />
-          </Route>
           <Route exact path="/">
             <Redirect to="/pokedex" />
           </Route>
@@ -75,10 +71,6 @@ const App: React.FC = () => (
           <IonTabButton tab="favorites" href="/favorites">
             <IonIcon aria-hidden="true" icon={heartSharp} />
             <IonLabel>Favorites</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon aria-hidden="true" icon={square} />
-            <IonLabel>Tab 3</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>

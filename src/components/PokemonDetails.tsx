@@ -1,7 +1,7 @@
 import { IonButton, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 import axios from "axios";
 import { heart } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import useStorage from "../hooks/useStorage";
 
@@ -42,22 +42,24 @@ const PokemonDetails: React.FC<PokemonDetailPageProps> = ({ match }) => {
             });
         }
         getDetails();
-    }, [url]);
+    }, [url, favorites]);
 
 
     useEffect(() => {
         setFavorite(favorites.includes(parseInt(match.params.id)));
+        // console.log(favorites);
     }, [favorites]);
 
 
     const handleFavorite = () => {
         if (!favorite) {
             addFavorite(parseInt(match.params.id));
+            console.log("added favorite")
             return;
         }
         removeFavorite(parseInt(match.params.id));
+        console.log("removed favorite");
     }
-
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', textAlign: 'center' }}>
             <IonPage>
@@ -81,5 +83,6 @@ const PokemonDetails: React.FC<PokemonDetailPageProps> = ({ match }) => {
         </div>
     );
 }
+
 
 export default PokemonDetails;

@@ -1,0 +1,14 @@
+ion-col {
+    text-align: center;
+}
+
+
+ion-card-header {
+    padding-top: 0;
+}
+
+
+ion-grid {
+    --ion-grid-padding: 0px;
+    --ion-grid-column-padding: 0px;
+}

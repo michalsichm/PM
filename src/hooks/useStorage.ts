@@ -1,5 +1,6 @@
-import { Storage } from "@ionic/storage";
+import { Drivers, Storage } from "@ionic/storage";
 import { useEffect, useState } from "react";
+import CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 
 const useStorage = () => {
     const [store, setStore] = useState<Storage>();
@@ -8,8 +9,11 @@ const useStorage = () => {
     useEffect(() => {
         const initStorage = async () => {
             const newStore = new Storage({
-                name: 'pokedexdb'
+                name: 'pokedexdb',
+                driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage]
             });
+            await newStore.defineDriver(CordovaSQLiteDriver);
+
             const store = await newStore.create();
             setStore(store);
 
@@ -18,6 +22,13 @@ const useStorage = () => {
         }
         initStorage();
     }, []);
+
+
+    const loadFavorites = async () => {
+        const storedFavorites: Array<number> = await store?.get('favorites') || [];
+        // console.log(storedFavorites);
+        return storedFavorites;
+    };
 
 
     const addFavorite = (newFavorite: number) => {
@@ -41,6 +52,7 @@ const useStorage = () => {
 
     return {
         favorites,
+        loadFavorites,
         addFavorite,
         removeFavorite,
     }
