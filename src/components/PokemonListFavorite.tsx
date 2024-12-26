@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useStorage from "../hooks/useStorage";
-import { IonCard, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonInput, IonItem, IonRow, IonSpinner } from "@ionic/react";
+import { IonCard, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonInput, IonItem, IonRow, IonSegmentView, IonSpinner, useIonViewDidEnter } from "@ionic/react";
 import axios from "axios";
 import { useLocation } from "react-router";
 
@@ -48,7 +48,6 @@ const PokemonListFavorites = () => {
 
 
     useEffect(() => {
-        console.log('hello');
         setFilteredPokemon(searchPokemon ? pokemonData.filter
             (pokemon => pokemon.name.toLowerCase().includes(searchPokemon.toLowerCase()))
             : pokemonData);

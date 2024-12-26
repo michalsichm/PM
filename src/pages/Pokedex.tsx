@@ -7,13 +7,13 @@ const Pokedex: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Pokedex</IonTitle>
+          <IonTitle>Pokédex</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Pokedex</IonTitle>
+            <IonTitle size="large">Pokédex</IonTitle>
           </IonToolbar>
         </IonHeader>
         <PokemonList></PokemonList>
