@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useStorage from "../hooks/useStorage";
-import { IonCard, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonRow, IonSpinner } from "@ionic/react";
+import { IonCard, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonInput, IonItem, IonRow, IonSpinner } from "@ionic/react";
 import axios from "axios";
 import { useLocation } from "react-router";
 
@@ -18,7 +18,9 @@ const capitalizeFirstLetter = (name: string) => {
 const PokemonListFavorites = () => {
     const { loadFavorites, isReady } = useStorage();
     const [pokemonData, setPokemonData] = useState<Array<Pokemon>>([]);
-    const location = useLocation()
+    const [searchPokemon, setSearchPokemon] = useState('');
+    const [filteredPokemon, setFilteredPokemon] = useState<Array<Pokemon>>([]);
+    const location = useLocation();
 
 
     useEffect(() => {
@@ -35,6 +37,7 @@ const PokemonListFavorites = () => {
                 })
                 const fetchedPokemons: Array<Pokemon> = await Promise.all(pokemonPromises);
                 setPokemonData(fetchedPokemons);
+                setFilteredPokemon(fetchedPokemons);
             }
             catch (e) {
                 console.error(e);
@@ -43,11 +46,23 @@ const PokemonListFavorites = () => {
         getData();
     }, [isReady, location]);
 
+
+    useEffect(() => {
+        console.log('hello');
+        setFilteredPokemon(searchPokemon ? pokemonData.filter
+            (pokemon => pokemon.name.toLowerCase().includes(searchPokemon.toLowerCase()))
+            : pokemonData);
+    }, [searchPokemon]);
+
+
     return (
         <>
             <IonGrid fixed={true}>
+                <IonItem>
+                    <IonInput placeholder="Search" onIonInput={(e: any) => setSearchPokemon(e.target.value)} clearInput value={searchPokemon} ></IonInput>
+                </IonItem>
                 <IonRow className="ion-justify-content-center">
-                    {pokemonData.map(pokemon => (
+                    {filteredPokemon.map(pokemon => (
                         <IonCol key={pokemon.id} size="6">
                             <IonCard routerLink={`/pokemon/${pokemon.id}`}>
                                 <img alt="Pokemon Image" src={pokemon.imageUrl} />

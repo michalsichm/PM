@@ -44,29 +44,28 @@ const PokemonList = () => {
 
     return (
         <>
-            {loading ? (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                    <IonSpinner name="crescent" />
-                </div>
-            ) : (
-                <IonGrid fixed={true}>
-                    <IonRow className="ion-justify-content-center">
-                        {pokemonData.map(pokemon => (
-                            <IonCol key={pokemon.id} size="6">
-                                <IonCard routerLink={`/pokemon/${pokemon.id}`}>
-                                    <img alt="Pokemon Image" src={pokemon.imageUrl} />
-                                    <IonCardHeader>
-                                        <IonCardTitle style={{ fontSize: 'clamp(14px, 8vw, 18px)' }}>
-                                            {pokemon.name}
-                                        </IonCardTitle>
-                                    </IonCardHeader>
-                                </IonCard>
-                            </IonCol>
-                        ))}
-                        <IonButton onClick={getPokemonData}>More</IonButton>
-                    </IonRow>
-                </IonGrid>
-            )}
+            <IonGrid fixed={true}>
+                <IonRow className="ion-justify-content-center">
+                    {pokemonData.map(pokemon => (
+                        <IonCol key={pokemon.id} size="6">
+                            <IonCard routerLink={`/pokemon/${pokemon.id}`}>
+                                <img alt="Pokemon Image" src={pokemon.imageUrl} />
+                                <IonCardHeader>
+                                    <IonCardTitle style={{ fontSize: 'clamp(14px, 8vw, 18px)' }}>
+                                        {pokemon.name}
+                                    </IonCardTitle>
+                                </IonCardHeader>
+                            </IonCard>
+                        </IonCol>
+                    ))}
+                </IonRow>
+                <IonRow className="ion-justify-content-center" style={{ margin: '1rem' }}>
+                    {!loading ? (<IonButton onClick={getPokemonData}>More</IonButton>) :
+                        (<div style={{ display: 'flex', alignItems: 'center'}}>
+                            <IonSpinner name="crescent" />
+                        </div>)}
+                </IonRow>
+            </IonGrid>
         </>
     );
 
