@@ -1,7 +1,7 @@
-import { IonButton, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonPage, IonSpinner, IonTitle, IonToolbar } from "@ionic/react";
 import axios from "axios";
 import { heart } from "ionicons/icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import useStorage from "../hooks/useStorage";
 
@@ -30,36 +30,46 @@ const PokemonDetails: React.FC<PokemonDetailPageProps> = ({ match }) => {
     const { favorites, addFavorite, removeFavorite } = useStorage();
     const [favorite, setFavorite] = useState(false);
     const url = `https://pokeapi.co/api/v2/pokemon/${match.params.id}`;
+    const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
         const getDetails = async () => {
-            const response = await axios.get(url);
-            const { id, name, weight, height, sprites: { front_default }, types } = response.data;
-            setPokemon({
-                id, name: capitalizeFirstLetter(name), imageUrl: front_default,
-                weight: weight / 10, height: height * 10,
-                types: types.map((t: any) => t.type.name)
-            });
+            try {
+                const response = await axios.get(url);
+                const { id, name, weight, height, sprites: { front_default }, types } = response.data;
+                setPokemon({
+                    id, name: capitalizeFirstLetter(name), imageUrl: front_default,
+                    weight: weight / 10, height: height * 10,
+                    types: types.map((t: any) => t.type.name)
+                });
+            }
+            catch (e) {
+                console.error(e);
+            }
+            finally {
+                setLoading(false);
+            }
         }
-        getDetails();
-    }, [url, favorites]);
+        getDetails()
+    }, [url]);
 
 
     useEffect(() => {
         setFavorite(favorites.includes(parseInt(match.params.id)));
-        // console.log(favorites);
     }, [favorites]);
 
 
     const handleFavorite = () => {
         if (!favorite) {
             addFavorite(parseInt(match.params.id));
-            console.log("added favorite")
             return;
         }
         removeFavorite(parseInt(match.params.id));
-        console.log("removed favorite");
     }
+
+
+
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', textAlign: 'center' }}>
             <IonPage>
@@ -69,15 +79,16 @@ const PokemonDetails: React.FC<PokemonDetailPageProps> = ({ match }) => {
                     </IonToolbar>
                 </IonHeader>
                 <IonContent fullscreen>
-                    <IonCard>
-                        <img alt="Pokemon Image" src={pokemon?.imageUrl} style={{ width: '150px', height: 'auto' }} />
-                        <IonCardContent>Weight: {pokemon?.weight} kg</IonCardContent>
-                        <IonCardContent>Height: {pokemon?.height} cm</IonCardContent>
-                        <IonCardContent>Type: {pokemon?.types.join("/")}</IonCardContent>
-                        <IonButton onClick={handleFavorite}>
-                            <IonIcon icon={heart} style={{ color: favorite ? 'red' : 'black' }}></IonIcon>
-                        </IonButton>
-                    </IonCard>
+                    {loading ? <IonSpinner name="crescent" /> :
+                        <IonCard>
+                            <img alt="Pokemon Image" src={pokemon?.imageUrl} style={{ width: '150px', height: 'auto' }} />
+                            <IonCardContent>Weight: {pokemon?.weight} kg</IonCardContent>
+                            <IonCardContent>Height: {pokemon?.height} cm</IonCardContent>
+                            <IonCardContent>Type: {pokemon?.types.join("/")}</IonCardContent>
+                            <IonButton onClick={handleFavorite}>
+                                <IonIcon icon={heart} style={{ color: favorite ? 'red' : 'black' }}></IonIcon>
+                            </IonButton>
+                        </IonCard>}
                 </IonContent>
             </IonPage>
         </div>

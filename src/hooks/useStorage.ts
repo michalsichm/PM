@@ -5,6 +5,7 @@ import CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 const useStorage = () => {
     const [store, setStore] = useState<Storage>();
     const [favorites, setFavorites] = useState<Array<number>>([]);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
         const initStorage = async () => {
@@ -19,6 +20,7 @@ const useStorage = () => {
 
             const storedFavorites = await store.get('favorites') || [];
             setFavorites(storedFavorites);
+            setIsReady(true);
         }
         initStorage();
     }, []);
@@ -26,7 +28,6 @@ const useStorage = () => {
 
     const loadFavorites = async () => {
         const storedFavorites: Array<number> = await store?.get('favorites') || [];
-        // console.log(storedFavorites);
         return storedFavorites;
     };
 
@@ -35,7 +36,6 @@ const useStorage = () => {
         setFavorites((favorites) => {
             const updatedFavorites = [...favorites, newFavorite];
             store?.set('favorites', updatedFavorites);
-            console.log(updatedFavorites);
             return updatedFavorites;
         });
 
@@ -45,13 +45,13 @@ const useStorage = () => {
         setFavorites((favorites) => {
             const updatedFavorites = favorites.filter(fav => fav !== remove);
             store?.set('favorites', updatedFavorites);
-            console.log(updatedFavorites);
             return updatedFavorites;
         })
     }
 
     return {
         favorites,
+        isReady,
         loadFavorites,
         addFavorite,
         removeFavorite,

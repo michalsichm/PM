@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useStorage from "../hooks/useStorage";
-import { IonCard, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonRow, useIonViewWillEnter } from "@ionic/react";
+import { IonCard, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonRow, IonSpinner } from "@ionic/react";
 import axios from "axios";
+import { useLocation } from "react-router";
 
 
 type Pokemon = {
@@ -15,25 +16,32 @@ const capitalizeFirstLetter = (name: string) => {
 };
 
 const PokemonListFavorites = () => {
-    const { loadFavorites } = useStorage();
+    const { loadFavorites, isReady } = useStorage();
     const [pokemonData, setPokemonData] = useState<Array<Pokemon>>([]);
+    const location = useLocation()
 
-    useIonViewWillEnter(() => {
+
+    useEffect(() => {
+        if (location.pathname !== '/favorites' || !isReady) {
+            return
+        }
         const getData = async () => {
-            const favorites = await loadFavorites();
-            console.log(favorites);
-            const pokemonPromises = favorites.map(async (favId) => {
-                const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${favId}`);
-                const { id, name, sprites: { front_default } } = response.data;
-                return { id, name: capitalizeFirstLetter(name), imageUrl: front_default };
-            })
-            // add error check
-            const fetchedPokemons: Array<Pokemon> = await Promise.all(pokemonPromises);
-            setPokemonData(fetchedPokemons);
+            try {
+                const favorites = await loadFavorites();
+                const pokemonPromises = favorites.map(async (favId) => {
+                    const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${favId}`);
+                    const { id, name, sprites: { front_default } } = response.data;
+                    return { id, name: capitalizeFirstLetter(name), imageUrl: front_default };
+                })
+                const fetchedPokemons: Array<Pokemon> = await Promise.all(pokemonPromises);
+                setPokemonData(fetchedPokemons);
+            }
+            catch (e) {
+                console.error(e);
+            }
         }
         getData();
-    });
-
+    }, [isReady, location]);
 
     return (
         <>
@@ -42,7 +50,6 @@ const PokemonListFavorites = () => {
                     {pokemonData.map(pokemon => (
                         <IonCol key={pokemon.id} size="6">
                             <IonCard routerLink={`/pokemon/${pokemon.id}`}>
-                                {/* <IonCard routerLink={`/pokemon/1`}> */}
                                 <img alt="Pokemon Image" src={pokemon.imageUrl} />
                                 <IonCardHeader>
                                     <IonCardTitle style={{ fontSize: 'clamp(14px, 8vw, 18px)' }}>
@@ -53,9 +60,8 @@ const PokemonListFavorites = () => {
                         </IonCol>
                     ))}
                 </IonRow>
-            </IonGrid >
+            </IonGrid>
         </>
-
     );
 
 }

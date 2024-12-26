@@ -10,7 +10,7 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { compassSharp, ellipse, heartSharp, list, square, triangle } from 'ionicons/icons';
+import { compassSharp, heartSharp } from 'ionicons/icons';
 import Pokedex from './pages/Pokedex';
 import Favorites from './pages/Favorites';
 
@@ -56,7 +56,7 @@ const App: React.FC = () => (
             <Pokedex />
           </Route>
           <Route exact path="/favorites" >
-          <Favorites />
+            <Favorites />
           </Route>
           <Route exact path="/pokemon/:id" component={PokemonDetails} />
           <Route exact path="/">
