@@ -51,7 +51,7 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonTabs>
-        <IonRouterOutlet animated={false}>
+        <IonRouterOutlet>
           <Route exact path="/pokedex">
             <Pokedex />
           </Route>
